@@ -49,11 +49,21 @@ export const shortenCommand: Command = {
 	execute: async function (args, message) {
 
 		var url = args[0].value;
-		var alias = args[args.findIndex(x => x.name === 'alias')].value ?? null;
+		var alias: any;
 		var whisper = args[args.findIndex(x => x.name === 'whisper')];
 
-		// Argument checks - tinysnails will NOT take protocol links, this checks for http to validate urls that for some reason dont already have it
+		// Argument checks
+		
+		// - tinysnails will NOT take protocol links, this checks for http to validate urls that for some reason dont already have it
 		if (!url.startsWith("http")) { url = "https://" + url; }
+		// - Check if alias exists - TypeScript will have a stroke if you try to read the value without checking if the argument exists
+		if(args[args.findIndex(x => x.name === 'alias')]) {alias = args[args.findIndex(x => x.name === 'alias')].value} else {alias = null;}
+		// - Filter no-no words because tinysnails doesnt like that.
+		if(alias != null && alias.match(/^fag(g|got|tard)?|cocks?sucker(s|ing)?|ni((g{2,}|q)+|[gq]{2,})[e3r]+(s|z)?|mudslime?s?|kikes?|spi(c|k)s?|chinks?|gooks?|bitch(es|ing|y)?|whor(es?|ing)|tr(a|@)nn?(y|ies?)|(b|re|r)tard(ed)?s?/))
+		{ 
+			sendReply(message?.channel.id ?? "0", `Couldn't create your shortlink. That alias contains blocked words.`);
+			return
+		}
 
 		const reqBody = { url: "https://tny-snls.xyz/api/snails", body: { "url": url, "slug": alias } }
 
