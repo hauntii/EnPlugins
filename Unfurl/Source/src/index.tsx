@@ -3,7 +3,7 @@ import { Plugin, registerPlugin } from 'enmity/managers/plugins';
 import manifest from '../manifest.json';
 import { furlCommands } from './commands';
 
-const SilentTyping: Plugin = {
+const Unfurl: Plugin = {
    ...manifest,
 
    onStart() {
