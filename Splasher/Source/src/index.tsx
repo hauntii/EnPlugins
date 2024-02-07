@@ -87,12 +87,12 @@ const Splasher: Plugin = {
          const currentBio = args[0].bio !== undefined ? args[0].bio : currentProfile['bio']
          console.log(args)
 
-         // Removve banner if null by setting the bio to the current one, which is always stripped of the splash.
+         // Remove banner if null by setting the bio to the current one, which is always stripped of the splash.
          if (args[0].banner === null) { args[0].bio = currentBio; return res.apply(self, args); }
          if (!(args[0].banner || currentProfile.banner.match(bannerRegex))) { return res.apply(self, args); }
 
          // If uploading hasn't completed, block the save from occuring.
-         if (args[0].banner && pendingID === null) {
+         if (args[0].banner && !pendingID) {
             Toasts.open({
                content: `Slow down and try again!`,
                source: getIDByName("ic_clock_timeout_16px"),
